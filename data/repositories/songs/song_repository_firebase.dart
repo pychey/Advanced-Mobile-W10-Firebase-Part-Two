@@ -8,7 +8,7 @@ import 'song_repository.dart';
 
 class SongRepositoryFirebase extends SongRepository {
   final Uri songsUri = Uri.https(
-    'test-a2a77-default-rtdb.asia-southeast1.firebasedatabase.app',
+    'pychey-the-best-learning-default-rtdb.asia-southeast1.firebasedatabase.app',
     '/songs.json',
   );
 
@@ -33,4 +33,25 @@ class SongRepositoryFirebase extends SongRepository {
 
   @override
   Future<Song?> fetchSongById(String id) async {}
+
+  @override
+  Future<int> likeSong(String songId, int currentLikes) async {
+    final int newLikes = currentLikes + 1;
+
+    final Uri likeUri = Uri.https(
+      'pychey-the-best-learning-default-rtdb.asia-southeast1.firebasedatabase.app',
+      '/songs/$songId/likes.json',
+    );
+
+    final http.Response response = await http.put(
+      likeUri,
+      body: json.encode(newLikes),
+    );
+
+    if (response.statusCode == 200) {
+      return newLikes;
+    } else {
+      throw Exception('Failed to like song');
+    }
+  }
 }
